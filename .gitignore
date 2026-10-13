@@ -1,5 +1,40 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
-outtascope.db
+*.py[cod]
+*$py.class
+
+# Environment and Secret files (strictly ignored)
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+outtascope.db
+
+# Testing and Caches
 .pytest_cache/
+.coverage
+htmlcov/
+test-results/
+playwright-report/
+
+# Logs and runtime artifacts
+*.log
+*.pid
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
