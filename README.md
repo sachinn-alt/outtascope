@@ -1,0 +1,110 @@
+# 🛡️ OuttaScope — The Client Scope Creep & Unpaid Revision Shield
+
+[![Open-Source AI](https://img.shields.io/badge/Open--Source_AI-Gemma_2-indigo?style=for-the-badge)](https://ai.google.dev/gemma)
+[![Database](https://img.shields.io/badge/Database-Tiger_Data-orange?style=for-the-badge)](https://www.tigerdata.com/)
+[![Deployment](https://img.shields.io/badge/Deploy-Render-46E3B7?style=for-the-badge)](https://render.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+
+> **Build for the [Hacktoberfest Open-Source AI Challenge: Week 2 (Side Hustle)](https://dev.to/challenges/hacktoberfest-week2-2026-10-12)**.  
+> *Protecting freelance side hustles from unpaid revision spirals and late-night scope creep.*
+
+---
+
+## 💥 The Real-World Pain Point
+
+Every developer, freelance video editor, and designer has experienced that Sunday 11:30 PM WhatsApp message:
+
+> *"Hey, loved the work! But can we completely overhaul the layout, switch to dark mode, and add a custom Stripe checkout before 9 AM tomorrow? Shouldn't take long, right?"*
+
+**The brutal reality:** Side hustlers don't fail because their work is bad—they fail because they do **30+ hours of free, unbilled revisions** because they feel awkward or confrontational saying: *"That costs extra."*
+
+Furthermore, pasting client confidential briefs, proprietary specifications, and private messages into proprietary cloud LLM APIs **violates client confidentiality and NDA agreements**.
+
+---
+
+## ⚡ Solution: What OuttaScope Does
+
+**OuttaScope** is an open-source, zero-leak boundary defense assistant that converts awkward revision pushbacks into billable revenue:
+
+1. **🚨 Instant Creep Meter & Infraction Audit (0–100):**
+   Categorizes the violation (e.g., *Architectural Overhaul*, *Feature Creep*, *Timeline Compression*, or *Infinite Aesthetic Loop*).
+2. **💬 3 Non-Confrontational Reply Tones:**
+   - **🟢 Diplomatic & Collaborative:** Enthusiastically accepts the vision while quoting a clear add-on fee and timeline extension.
+   - **🟡 Firm Boundary:** Professionally pauses the revision spiral, insisting on shipping agreed milestone deliverables before quoting Phase 2.
+   - **🔴 Executive Change Order:** Contract-ready legal change order notice suitable for enterprise clients and agencies.
+3. **📑 Instant Change Order Mini-Invoice:**
+   Automatically calculates a mathematically fair surcharge (e.g., `+$175`) and timeline extension based on the milestone budget.
+4. **🔒 100% Zero-Leak Privacy:**
+   Powered by **Google's Gemma 2** open-weight model. Client project conversations are audited locally and privately without being fed into commercial training sets.
+
+---
+
+## 🏗️ Architecture & Open Tech Stack
+
+```mermaid
+graph TD
+    ClientMessage[Client Message / Revision Demand] --> Frontend[OuttaScope Glassmorphism UI]
+    Frontend --> API[FastAPI Async Server]
+    API --> Gemma[Gemma 2 Open-Weight Engine<br/>Local Ollama / Open API]
+    Gemma --> AuditResult[Creep Score + 3 Tones + Change Order]
+    API --> TigerDB[(Tiger Data<br/>PostgreSQL / SQLite)]
+    TigerDB --> Vault[Saved Boundary Templates & Audit History]
+    AuditResult --> Frontend
+```
+
+- **Open AI Foundation:** [Gemma 2](https://ai.google.dev/gemma) (Google Open Weights)
+- **Data Persistence:** [Tiger Data](https://www.tigerdata.com/) (PostgreSQL / SQLite fallback)
+- **Application Core:** Python 3.11+, FastAPI, Uvicorn, Pydantic
+- **Web Interface:** Vanilla HTML5, Modern CSS Glassmorphism, Zero Framework Bloat
+- **Cloud Deployment:** [Render](https://render.com) (Free Web Service Tier via `render.yaml`)
+
+---
+
+## 🚀 Quickstart & Local Installation
+
+### 1. Clone & Install
+```bash
+git clone https://github.com/your-username/outtascope.git
+cd outtascope
+pip install -r requirements.txt
+```
+
+### 2. Run the Application
+```bash
+python -m uvicorn src.app:app --host 127.0.0.1 --port 8000 --reload
+```
+Open your browser to: **`http://localhost:8000`**
+
+### 3. Optional: Run with Local Gemma 2 (Ollama)
+```bash
+# Pull and serve Gemma 2 completely offline:
+ollama run gemma2
+```
+*Note: OuttaScope includes a deterministic fallback engine, meaning it runs instantly out-of-the-box even without an active Ollama instance!*
+
+---
+
+## ☁️ 1-Click Deployment on Render
+
+OuttaScope is configured with a native `render.yaml` blueprint:
+
+1. Push this repository to GitHub.
+2. In the [Render Dashboard](https://dashboard.render.com), click **New +** → **Blueprint**.
+3. Select your repository—Render will automatically configure the build and deploy your free web service!
+
+---
+
+## 🏆 Hacktoberfest Prize Eligibility
+
+This project was built for the **Hacktoberfest Open-Source AI Challenge: Week 2 (Side Hustle)** and enters:
+
+* 🌟 **Grand Prize ($250)**: Open-Source AI Side Hustle
+* 🥇 **Best Use of Gemma ($200)**: Google's open-weight model powers the core reasoning and boundary generation
+* 🥇 **Best Use of Render ($200)**: Native `render.yaml` blueprint and free web service deployment
+* 🥈 **Best Use of Tiger Data ($100)**: Audit history and boundary template persistence
+* 🥈 **Best Use of GitHub Copilot ($100)**: Developed and planned with Copilot
+
+---
+
+## 📄 License
+MIT License. Free and open-source for all creators and freelancers.
