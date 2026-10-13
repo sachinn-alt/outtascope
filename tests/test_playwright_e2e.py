@@ -1,9 +1,34 @@
-import pytest
-import os
-import sys
+import threading
+import time
+import urllib.request
+import uvicorn
 from playwright.sync_api import sync_playwright
 
 BASE_URL = os.getenv("PLAYWRIGHT_BASE_URL", "http://127.0.0.1:8000")
+
+@pytest.fixture(scope="session", autouse=True)
+def ensure_server_running():
+    """Ensures FastAPI server is running before executing Playwright tests."""
+    try:
+        with urllib.request.urlopen(f"{BASE_URL}/api/health", timeout=1) as response:
+            if response.status == 200:
+                return
+    except Exception:
+        pass
+
+    server_thread = threading.Thread(
+        target=lambda: uvicorn.run("src.app:app", host="127.0.0.1", port=8000, log_level="warning"),
+        daemon=True
+    )
+    server_thread.start()
+
+    for _ in range(30):
+        try:
+            with urllib.request.urlopen(f"{BASE_URL}/api/health", timeout=1) as response:
+                if response.status == 200:
+                    break
+        except Exception:
+            time.sleep(0.2)
 
 def test_playwright_page_loads_and_branding():
     with sync_playwright() as p:

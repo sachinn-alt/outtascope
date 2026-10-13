@@ -38,6 +38,18 @@ jobs:
         run: |
           python -m compileall src/ tests/
 
+      - name: Start FastAPI Background Server for Playwright
+        run: |
+          nohup python -m uvicorn src.app:app --host 127.0.0.1 --port 8000 > uvicorn.log 2>&1 &
+          for i in {1..20}; do
+            if curl -s http://127.0.0.1:8000/api/health; then
+              echo "Server is ready!"
+              break
+            fi
+            echo "Waiting for server ($i)..."
+            sleep 1
+          done
+
       - name: Run Full Test Suite (Unit, Integration & Playwright E2E)
         run: |
           python -m pytest tests -v
