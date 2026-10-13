@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnText = submitBtn.querySelector('.btn-text');
   const btnLoader = submitBtn.querySelector('.btn-loader');
   
+  const voiceBtn = document.getElementById('voiceBtn');
+  const rateMultiplier = document.getElementById('rateMultiplier');
+  const multiplierVal = document.getElementById('multiplierVal');
+  const downloadCoBtn = document.getElementById('downloadCoBtn');
+  
   const emptyState = document.getElementById('emptyState');
   const auditContent = document.getElementById('auditContent');
   
@@ -32,6 +37,97 @@ document.addEventListener('DOMContentLoaded', () => {
   // State
   let currentAudit = null;
   let activeTone = 'diplomatic';
+  let baseFee = 150;
+
+  // Aceternity Spotlight Mouse Tracking on Cards
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(99, 102, 241, 0.08), rgba(18, 24, 38, 0.75))`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.background = '';
+    });
+  });
+
+  // Voice Dictation (Web Speech API)
+  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      voiceBtn.classList.add('recording');
+      voiceBtn.innerHTML = '🔴 Listening...';
+    };
+
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      clientMessageInput.value = (clientMessageInput.value + ' ' + transcript).trim();
+      updateCharCount();
+    };
+
+    recognition.onend = () => {
+      voiceBtn.classList.remove('recording');
+      voiceBtn.innerHTML = '<span class="mic-icon">🎙️</span> Dictate';
+    };
+
+    voiceBtn.addEventListener('click', () => {
+      try { recognition.start(); } catch(err) { recognition.stop(); }
+    });
+  } else {
+    voiceBtn.style.display = 'none';
+  }
+
+  // Rate Multiplier Slider Listener
+  rateMultiplier.addEventListener('input', () => {
+    const mult = parseFloat(rateMultiplier.value);
+    multiplierVal.textContent = `${mult.toFixed(1)}x (${mult < 1 ? 'Lenient' : mult > 1.3 ? 'Aggressive' : 'Standard'})`;
+    if (currentAudit) {
+      const adjustedFee = Math.round(baseFee * mult);
+      feeEst.textContent = `+$${adjustedFee}`;
+    }
+  });
+
+  // Export Change Order Document (.md)
+  downloadCoBtn.addEventListener('click', () => {
+    if (!currentAudit) return;
+    const mult = parseFloat(rateMultiplier.value) || 1.0;
+    const adjustedFee = Math.round(baseFee * mult);
+    const days = currentAudit.change_order?.timeline_extension_days || 2;
+    const items = currentAudit.change_order?.line_items || ['Supplemental scope expansion'];
+
+    let md = `# 📑 FORMAL CHANGE ORDER & SCOPE ADDENDUM\n`;
+    md += `**Document Reference:** CO-${String(currentAudit.audit_id || 1).padStart(4, '0')}\n`;
+    md += `**Date:** ${new Date().toISOString().slice(0, 10)}\n`;
+    md += `**Project Niche:** ${projectTypeSelect.value.replace('_', ' ').toUpperCase()}\n`;
+    md += `**Base Milestone:** $${budgetInput.value} USD\n\n`;
+    md += `---\n\n### 1. Scope Infraction Assessment\n`;
+    md += `> **Category:** ${currentAudit.primary_category}\n`;
+    md += `> **Severity Level:** ${currentAudit.infraction_level} (Creep Index: ${currentAudit.creep_score}/100)\n\n`;
+    md += `### 2. Contractual Rationale\n${currentAudit.why_out_of_scope}\n\n`;
+    md += `### 3. Surcharge & Timeline Addendum\n`;
+    md += `| Item | Duration | Surcharge |\n| :--- | :---: | :---: |\n`;
+    items.forEach(it => {
+      md += `| ${it} | +${days} days | $${adjustedFee} |\n`;
+    });
+    md += `\n**Total Supplemental Surcharge:** **$${adjustedFee} USD**\n`;
+    md += `**Total Schedule Extension:** **+${days} Business Days**\n\n`;
+    md += `---\n### 4. Client Authorization\n*Approved by Client:* ____________________________\n*Date:* ____________________________\n`;
+
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Change_Order_CO-${String(currentAudit.audit_id || 1).padStart(4, '0')}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
 
   // Sample Scenarios
   const sampleMessages = {
@@ -106,7 +202,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Score & Level Styling
     scoreValue.textContent = data.creep_score;
     categoryTitle.textContent = data.primary_category;
-    feeEst.textContent = `+$${data.change_order?.suggested_fee || 150}`;
+    baseFee = data.change_order?.suggested_fee || 150;
+    const mult = parseFloat(rateMultiplier.value) || 1.0;
+    feeEst.textContent = `+$${Math.round(baseFee * mult)}`;
     whyOutOfScope.textContent = data.why_out_of_scope;
 
     // Infraction Tag
@@ -185,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     copyBtn.classList.remove('copied');
   }
 
-  // Copy to Clipboard
+  // Copy to Clipboard with Micro-Confetti Burst
   copyBtn.addEventListener('click', async () => {
     const textToCopy = replyText.textContent;
     if (!textToCopy) return;
@@ -194,6 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
       await navigator.clipboard.writeText(textToCopy);
       copyBtn.innerHTML = '<span class="copy-icon">✅</span> Copied!';
       copyBtn.classList.add('copied');
+      triggerConfetti();
       setTimeout(() => {
         copyBtn.innerHTML = '<span class="copy-icon">📋</span> Copy Reply';
         copyBtn.classList.remove('copied');
@@ -202,6 +301,50 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Could not copy to clipboard.');
     }
   });
+
+  // Pure Canvas Confetti Burst
+  function triggerConfetti() {
+    const canvas = document.getElementById('confettiCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const colors = ['#6366f1', '#a855f7', '#ec4899', '#10b981', '#f59e0b', '#38bdf8'];
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: canvas.width / 2 + (Math.random() - 0.5) * 200,
+        y: canvas.height * 0.45,
+        vx: (Math.random() - 0.5) * 12,
+        vy: (Math.random() - 1.5) * 10,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        size: Math.random() * 6 + 4,
+        alpha: 1
+      });
+    }
+
+    let frame = 0;
+    function anim() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.35; // gravity
+        p.alpha -= 0.015;
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+      });
+      frame++;
+      if (frame < 70) {
+        requestAnimationFrame(anim);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+    requestAnimationFrame(anim);
+  }
 
   // Load Saved Boundary Templates (Tiger Data Vault)
   async function loadTemplates() {
