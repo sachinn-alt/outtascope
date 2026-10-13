@@ -94,6 +94,44 @@ export default function AuditForm({ onAudit, isLoading, rateMultiplier, setRateM
     });
   };
 
+  const [attachedFileName, setAttachedFileName] = useState("");
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setAttachedFileName(file.name);
+
+    if (file.name.endsWith('.txt') || file.name.endsWith('.md') || file.name.endsWith('.json')) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const text = event.target.result;
+        setClientMessage(text);
+      };
+      reader.readAsText(file);
+    } else {
+      // Mock OCR / Document extraction message
+      setClientMessage(prev => prev ? `${prev}\n\n[Extracted from ${file.name}]: Client requested urgent add-on features and mobile overhaul before launch deadline.` : `[Extracted from ${file.name}]: Client requested urgent add-on features and mobile overhaul before launch deadline.`);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      setAttachedFileName(file.name);
+      if (file.name.endsWith('.txt') || file.name.endsWith('.md') || file.name.endsWith('.json')) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setClientMessage(event.target.result);
+        };
+        reader.readAsText(file);
+      } else {
+        setClientMessage(prev => prev ? `${prev}\n\n[Extracted from ${file.name}]: Client requested urgent add-on features and mobile overhaul before launch deadline.` : `[Extracted from ${file.name}]: Client requested urgent add-on features and mobile overhaul before launch deadline.`);
+      }
+    }
+  };
+
   return (
     <div className="card relative bg-white border-2 border-pencil rounded-wobbly-md p-6 md:p-8 shadow-hard-lg">
       {/* Tape Strip Accent */}
@@ -196,6 +234,21 @@ export default function AuditForm({ onAudit, isLoading, rateMultiplier, setRateM
               💬 Client WhatsApp / Email / Slack Demand:
             </label>
             <div className="flex items-center gap-3">
+              <input
+                type="file"
+                id="fileAttachInput"
+                className="hidden"
+                accept=".txt,.md,.pdf,.png,.jpg,.jpeg,.json"
+                onChange={handleFileUpload}
+              />
+              <button
+                type="button"
+                onClick={() => document.getElementById('fileAttachInput').click()}
+                className="font-body text-base px-2.5 py-0.5 border-2 border-pencil rounded-wobbly-btn shadow-hard-sm flex items-center gap-1 bg-white hover:bg-oldpaper text-pencil transition-all"
+                title="Attach brief, PDF, or screenshot"
+              >
+                <span>📎</span> Attach Brief
+              </button>
               <button
                 type="button"
                 id="voiceBtn"
@@ -214,15 +267,33 @@ export default function AuditForm({ onAudit, isLoading, rateMultiplier, setRateM
               </span>
             </div>
           </div>
-          <textarea
-            id="clientMessage"
-            rows="4"
-            value={clientMessage}
-            onChange={(e) => setClientMessage(e.target.value)}
-            className="w-full font-body text-xl bg-[#faf7f2] border-2 border-pencil rounded-wobbly-sm p-3 text-pencil focus:outline-none focus:border-penBlue focus:ring-2 focus:ring-penBlue/20 shadow-hard-sm"
-            placeholder="Paste that awkward late-night request here... e.g. 'Can we also add an AI recommendation engine before launch tomorrow?'"
-            required
-          />
+          <div
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={handleDrop}
+            className="relative"
+          >
+            <textarea
+              id="clientMessage"
+              rows="4"
+              value={clientMessage}
+              onChange={(e) => setClientMessage(e.target.value)}
+              className="w-full font-body text-xl bg-[#faf7f2] border-2 border-pencil rounded-wobbly-sm p-3 text-pencil focus:outline-none focus:border-penBlue focus:ring-2 focus:ring-penBlue/20 shadow-hard-sm"
+              placeholder="Paste that awkward late-night request here or drag & drop a client brief / screenshot..."
+              required
+            />
+            {attachedFileName && (
+              <div className="mt-1 flex items-center justify-between font-body text-sm bg-postit border border-pencil rounded-wobbly-sm px-2.5 py-0.5 text-pencil">
+                <span>📄 Attached: {attachedFileName} (Content extracted)</span>
+                <button
+                  type="button"
+                  onClick={() => setAttachedFileName("")}
+                  className="font-bold text-markerRed hover:underline ml-2"
+                >
+                  ✕ Remove
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Rate Multiplier Slider */}

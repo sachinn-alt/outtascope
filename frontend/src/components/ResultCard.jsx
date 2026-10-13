@@ -57,6 +57,17 @@ export default function ResultCard({ auditResult, rateMultiplier }) {
     });
   };
 
+  const handleWhatsApp = () => {
+    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(currentReplyText)}`;
+    window.open(url, '_blank');
+  };
+
+  const handleEmail = () => {
+    const subject = encodeURIComponent(`Project Scope Update: ${primary_category}`);
+    const body = encodeURIComponent(currentReplyText);
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  };
+
   // Export Change Order as Markdown
   const handleDownloadChangeOrder = () => {
     const mdContent = `# SUPPLEMENTARY CHANGE ORDER AGREEMENT
@@ -162,6 +173,24 @@ ${lineItems.map(item => `- [ ] ${item}`).join('\n')}
           </div>
         </div>
 
+        {/* Tiger Data Historical Precedent Callout */}
+        {auditResult.precedent && auditResult.precedent.has_precedent && (
+          <div className="bg-[#f0fdf4] border-2 border-pencil rounded-wobbly-sm p-3.5 mb-6 shadow-hard-sm transform rotate-0.5">
+            <div className="flex items-center justify-between mb-1">
+              <span className="font-heading font-bold text-base text-pencil flex items-center gap-1.5">
+                <span>🐯</span> Tiger Data Precedent ({auditResult.precedent.similarity_pct}% Semantic Match)
+              </span>
+              <span className="font-heading text-xs bg-white border border-pencil rounded-wobbly-sm px-2 py-0.5 text-markerRed font-bold shadow-hard-sm">
+                Past Fee: +${auditResult.precedent.past_fee}
+              </span>
+            </div>
+            <p className="font-body text-base text-pencil/80">
+              Similar {auditResult.precedent.matched_category} detected in your historical audits:
+              <span className="italic font-bold text-pencil"> "{auditResult.precedent.past_message_snippet}"</span>
+            </p>
+          </div>
+        )}
+
         {/* Contractual Justification Callout */}
         <div className="bg-postit border-2 border-pencil rounded-wobbly-sm p-4 mb-6 shadow-hard-sm transform -rotate-0.5">
           <div className="font-heading text-base font-bold text-pencil flex items-center gap-1.5 mb-1">
@@ -170,6 +199,32 @@ ${lineItems.map(item => `- [ ] ${item}`).join('\n')}
           <p id="whyOutOfScope" className="font-body text-xl text-pencil leading-relaxed">
             {why_out_of_scope}
           </p>
+        </div>
+
+        {/* Client Red-Flag Risk Radar Card */}
+        <div className="bg-[#fff1f2] border-2 border-pencil rounded-wobbly-sm p-4 mb-6 shadow-hard-sm">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🚩</span>
+              <h4 className="font-heading text-lg font-bold text-pencil">
+                Client Scope Risk Radar
+              </h4>
+            </div>
+            <div className="font-heading text-xl font-bold bg-white text-markerRed border-2 border-markerRed rounded-wobbly-badge px-3 py-0.5 shadow-hard-sm transform rotate-2">
+              Grade: {creep_score >= 80 ? "F (Critical)" : creep_score >= 65 ? "D (High Risk)" : creep_score >= 45 ? "C (Warning)" : "B (Manageable)"}
+            </div>
+          </div>
+          <ul className="font-body text-base space-y-1 text-pencil/90 pl-1">
+            <li className="flex items-center gap-2">
+              <span className="text-markerRed font-bold">⚠️</span> {creep_score >= 70 ? "Unbounded revision escalation without budget allocation" : "Incremental task expansion outside signed deliverables"}
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-markerRed font-bold">⚠️</span> {infraction_level === "CRITICAL" ? "Timeline compression violates milestone delivery schedule" : "Requires supplementary architectural sign-off"}
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-pencil font-bold">💡</span> <span className="font-bold">Recommendation:</span> Do not start unpaid work. Dispatch the diplomatic or change order pushback below immediately.
+            </li>
+          </ul>
         </div>
 
         {/* Tone Selection Tabs */}
@@ -208,21 +263,43 @@ ${lineItems.map(item => `- [ ] ${item}`).join('\n')}
           </div>
         </div>
 
-        {/* Response Box & Copy Action */}
-        <div className="relative mb-6">
+        {/* Response Box */}
+        <div className="relative mb-3">
           <div
             id="responseBox"
             className="font-body text-xl text-pencil bg-[#faf7f2] border-2 border-pencil rounded-wobbly-sm p-4 min-h-[140px] whitespace-pre-wrap shadow-hard-sm leading-relaxed"
           >
             <div id="replyText">{currentReplyText}</div>
           </div>
+        </div>
+
+        {/* Direct Action Dispatch Bar */}
+        <div className="flex flex-wrap items-center gap-2.5 mb-6">
           <button
             type="button"
             id="copyBtn"
             onClick={handleCopy}
-            className="hand-drawn-btn absolute top-3 right-3 font-heading text-sm font-bold bg-white hover:bg-postit text-pencil border-2 border-pencil rounded-wobbly-btn px-3 py-1 shadow-hard-sm flex items-center gap-1"
+            className="hand-drawn-btn font-heading text-base font-bold bg-white hover:bg-postit text-pencil border-2 border-pencil rounded-wobbly-btn px-4 py-1.5 shadow-hard-sm flex items-center gap-1.5"
           >
             {copied ? "✅ Copied!" : "📋 Copy Reply"}
+          </button>
+          <button
+            type="button"
+            id="whatsappBtn"
+            onClick={handleWhatsApp}
+            className="hand-drawn-btn font-heading text-base font-bold bg-[#dcfce7] hover:bg-[#bbf7d0] text-pencil border-2 border-pencil rounded-wobbly-btn px-4 py-1.5 shadow-hard-sm flex items-center gap-1.5"
+            title="Open in WhatsApp directly"
+          >
+            <span>📲</span> Open in WhatsApp
+          </button>
+          <button
+            type="button"
+            id="emailBtn"
+            onClick={handleEmail}
+            className="hand-drawn-btn font-heading text-base font-bold bg-[#e0f2fe] hover:bg-[#bae6fd] text-pencil border-2 border-pencil rounded-wobbly-btn px-4 py-1.5 shadow-hard-sm flex items-center gap-1.5"
+            title="Open in Email client directly"
+          >
+            <span>✉️</span> Open in Email
           </button>
         </div>
 

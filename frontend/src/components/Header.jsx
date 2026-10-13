@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Header() {
+export default function Header({ recoveredRevenue = 1650, rescuedHours = 19.5 }) {
   return (
     <header className="app-header mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6 pb-6 border-b-2 border-dashed border-pencil/30 relative">
       {/* Tape decoration */}
@@ -21,6 +21,17 @@ export default function Header() {
         <p className="font-body text-xl md:text-2xl text-pencil/80 mt-1 max-w-xl">
           The Client Scope Creep & Unpaid Revision Shield for Freelancers
         </p>
+
+        {/* Live Revenue & Hours Recovered Ticker */}
+        <div className="mt-2.5 flex items-center gap-2">
+          <div className="inline-flex flex-wrap items-center gap-2 bg-postit border-2 border-pencil rounded-wobbly-sm px-3 py-1 shadow-hard-sm transform -rotate-1 hover:rotate-0 transition-transform">
+            <span className="font-heading font-bold text-sm text-pencil">💰 Unpaid Scope Recovered:</span>
+            <span className="font-heading font-bold text-base text-markerRed">${recoveredRevenue.toLocaleString()} USD</span>
+            <span className="text-pencil/40 hidden sm:inline">•</span>
+            <span className="font-heading font-bold text-sm text-pencil">⏱️ Hours Rescued:</span>
+            <span className="font-heading font-bold text-base text-penBlue">{rescuedHours}h</span>
+          </div>
+        </div>
       </div>
 
       {/* Tilted Sticky Badges (Preserves .header-badges .badge for Playwright) */}

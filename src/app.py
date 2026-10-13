@@ -74,6 +74,10 @@ async def audit_scope(req: AuditRequest):
     audit_id = db.save_audit(audit_data_to_save)
     audit_result["audit_id"] = audit_id
 
+    # 3. Retrieve historical scope precedent from Tiger Data
+    precedent = db.find_similar_precedent(req.client_message, project_type=req.project_type)
+    audit_result["precedent"] = precedent
+
     return audit_result
 
 @app.get("/api/history")

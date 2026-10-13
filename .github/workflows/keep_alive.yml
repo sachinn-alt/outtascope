@@ -1,0 +1,17 @@
+name: Render Keep-Alive Ping
+
+on:
+  schedule:
+    # Runs every 12 minutes (Render sleeps after 15 minutes of inactivity)
+    - cron: '*/12 * * * *'
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    name: Ping OuttaScope Production API
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Health Endpoint
+        run: |
+          echo "Pinging OuttaScope production deployment..."
+          curl -s -f -m 20 https://outtascope.onrender.com/api/health || echo "Ping dispatched."
