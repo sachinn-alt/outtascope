@@ -35,6 +35,6 @@ desktop.ini
 
 # IDE and Editor files
 .vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
+# Dependencies
+node_modules/
+frontend/node_modules/

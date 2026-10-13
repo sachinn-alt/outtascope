@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #fdfbf7;
+    background-image: radial-gradient(#e5e0d8 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+    color: #2d2d2d;
+    font-family: 'Patrick Hand', cursive, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Kalam', cursive, sans-serif;
+    color: #2d2d2d;
+  }
+}
+
+/* Authentic Hand-Drawn Decorators */
+.tape-strip {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1.5deg);
+  width: 110px;
+  height: 26px;
+  background-color: rgba(229, 224, 216, 0.7);
+  border: 1px dashed rgba(45, 45, 45, 0.25);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.tape-strip-left {
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  transform: rotate(-3deg);
+  width: 85px;
+  height: 24px;
+  background-color: rgba(255, 249, 196, 0.85);
+  border: 1px dashed rgba(45, 45, 45, 0.3);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.thumbtack-red {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  background-color: #ff4d4d;
+  border: 2px solid #2d2d2d;
+  border-radius: 50%;
+  box-shadow: 2px 2px 0px #2d2d2d;
+  z-index: 15;
+}
+
+.thumbtack-blue {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  background-color: #2d5da1;
+  border: 2px solid #2d2d2d;
+  border-radius: 50%;
+  box-shadow: 2px 2px 0px #2d2d2d;
+  z-index: 15;
+}
+
+/* Lined Legal Pad Pattern for Change Orders */
+.lined-paper {
+  background-color: #ffffff;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    #e5e0d8 28px
+  );
+  line-height: 28px;
+}
+
+/* Tactile Hand-Drawn Button Physics (Press Flat on Active) */
+.hand-drawn-btn {
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.hand-drawn-btn:hover {
+  transform: translate(-1px, -1px);
+}
+.hand-drawn-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px 0px 0px #2d2d2d !important;
+}
+
+/* Custom Range Slider (Hand-Drawn Pencil Track) */
+input[type="range"] {
+  -webkit-appearance: none;
+  background: transparent;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px;
+  background: #e5e0d8;
+  border: 2px solid #2d2d2d;
+  border-radius: 120px 10px 100px 10px / 10px 100px 10px 120px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+  background: #ff4d4d;
+  border: 2px solid #2d2d2d;
+  box-shadow: 2px 2px 0px #2d2d2d;
+  cursor: pointer;
+  margin-top: -8px;
+  transition: transform 0.1s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+input[type="range"]::-webkit-slider-thumb:active {
+  background: #2d5da1;
+  box-shadow: 0px 0px 0px #2d2d2d;
+}
