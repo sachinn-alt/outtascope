@@ -1,7 +1,7 @@
 import os
 import sqlite3
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Dict, Any
 
 class TigerDataStore:
@@ -47,9 +47,9 @@ class TigerDataStore:
         cur.execute("SELECT COUNT(*) FROM saved_templates")
         if cur.fetchone()[0] == 0:
             sample_templates = [
-                ("The Friendly Up-Charge", "Diplomatic", "Love this vision! Since it's outside our initial scope, I can do it for +$120 and 2 days. Should I add it to the invoice?", datetime.utcnow().isoformat()),
-                ("The Phase 2 Gatekeeper", "Boundary", "To launch on time, let's ship current agreed items first, then tackle this as Phase 2 right after!", datetime.utcnow().isoformat()),
-                ("The Formal Change Order", "Executive", "Change Order Notice: The requested addition requires a supplemental agreement of $250. Please approve to proceed.", datetime.utcnow().isoformat())
+                ("The Friendly Up-Charge", "Diplomatic", "Love this vision! Since it's outside our initial scope, I can do it for +$120 and 2 days. Should I add it to the invoice?", datetime.now(timezone.utc).isoformat()),
+                ("The Phase 2 Gatekeeper", "Boundary", "To launch on time, let's ship current agreed items first, then tackle this as Phase 2 right after!", datetime.now(timezone.utc).isoformat()),
+                ("The Formal Change Order", "Executive", "Change Order Notice: The requested addition requires a supplemental agreement of $250. Please approve to proceed.", datetime.now(timezone.utc).isoformat())
             ]
             cur.executemany("INSERT INTO saved_templates (title, category, response_text, created_at) VALUES (?, ?, ?, ?)", sample_templates)
 
@@ -59,7 +59,7 @@ class TigerDataStore:
     def save_audit(self, audit_data: Dict[str, Any]) -> int:
         conn = sqlite3.connect(self.sqlite_path)
         cur = conn.cursor()
-        now = datetime.utcnow().isoformat()
+        now = datetime.now(timezone.utc).isoformat()
         cur.execute("""
             INSERT INTO scope_audits (
                 created_at, project_type, budget, client_message,
