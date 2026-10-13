@@ -26,15 +26,23 @@ Furthermore, pasting client confidential briefs, proprietary specifications, and
 
 **OuttaScope** is an open-source, zero-leak boundary defense assistant that converts awkward revision pushbacks into billable revenue:
 
-1. **🚨 Instant Creep Meter & Infraction Audit (0–100):**
-   Categorizes the violation (e.g., *Architectural Overhaul*, *Feature Creep*, *Timeline Compression*, or *Infinite Aesthetic Loop*).
+1. **🚨 Instant Creep Meter & Letter-Grade Risk Radar (A–F):**
+   Categorizes the violation (e.g., *Architectural Overhaul*, *Feature Creep*, *Timeline Compression*, or *Infinite Aesthetic Loop*) with itemized contractual red flags and negotiation advice.
 2. **💬 3 Non-Confrontational Reply Tones:**
    - **🟢 Diplomatic & Collaborative:** Enthusiastically accepts the vision while quoting a clear add-on fee and timeline extension.
    - **🟡 Firm Boundary:** Professionally pauses the revision spiral, insisting on shipping agreed milestone deliverables before quoting Phase 2.
    - **🔴 Executive Change Order:** Contract-ready legal change order notice suitable for enterprise clients and agencies.
-3. **📑 Instant Change Order Mini-Invoice:**
+3. **📲 1-Click WhatsApp & Email Direct Dispatch:**
+   Push back immediately via WhatsApp Web/Mobile (`api.whatsapp.com`) or native mail client (`mailto:`) with pre-formatted pushback copy in one click.
+4. **💰 Revenue Recovered & Hours Rescued Live Tracker:**
+   Persistent real-time tally in the header tracking cumulative dollars and billable hours rescued across client audits.
+5. **🐯 Tiger Data Semantic Precedent Matching & Vault:**
+   Calculates semantic Jaccard overlap against past client scope infractions, displaying historical similarity rates, previous fee quotes, and a canned template library.
+6. **📎 Drag-and-Drop Brief Extractor:**
+   Directly drag and drop client brief files or screenshots into the audit scratchpad for automatic text extraction.
+7. **📑 Instant Change Order Mini-Invoice:**
    Automatically calculates a mathematically fair surcharge (e.g., `+$175`) and timeline extension based on the milestone budget.
-4. **🔒 100% Zero-Leak Privacy:**
+8. **🔒 100% Zero-Leak Privacy:**
    Powered by **Google's Gemma 2** open-weight model. Client project conversations are audited locally and privately without being fed into commercial training sets.
 
 ---
@@ -55,8 +63,9 @@ graph TD
 - **Open AI Foundation:** [Gemma 2](https://ai.google.dev/gemma) (Google Open Weights)
 - **Data Persistence:** [Tiger Data](https://www.tigerdata.com/) (PostgreSQL / SQLite fallback)
 - **Application Core:** Python 3.11+, FastAPI, Uvicorn, Pydantic
-- **Web Interface:** Vanilla HTML5, Modern CSS Glassmorphism, Zero Framework Bloat
+- **Web Interface:** React 18, Vite, Tailwind CSS, Hand-Drawn Sketchpad Aesthetic (Kalam & Patrick Hand typography, paper textures, tactile physics)
 - **Cloud Deployment:** [Render](https://render.com) (Free Web Service Tier via `render.yaml`)
+- **Reliability:** GitHub Actions 12-min Keep-Alive Heartbeat (sub-second cold start prevention)
 
 ### 📚 Formal Engineering Specifications
 - 📋 [**Product Requirements Document (PRD.md)**](PRD.md) — Personas, user journeys, feature matrix & business metrics.
@@ -69,7 +78,7 @@ graph TD
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/your-username/outtascope.git
+git clone https://github.com/sachinn-alt/outtascope.git
 cd outtascope
 pip install -r requirements.txt
 ```
