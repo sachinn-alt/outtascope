@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
 
-export default function ResultCard({ auditResult, rateMultiplier }) {
+export default function ResultCard({ auditResult, result, rateMultiplier }) {
   const [activeTone, setActiveTone] = useState("diplomatic");
   const [copied, setCopied] = useState(false);
 
-  if (!auditResult) {
+  const activeAudit = auditResult || result;
+
+  if (!activeAudit) {
     return (
       <div className="card relative bg-white/60 border-2 border-dashed border-pencil/40 rounded-wobbly-md p-8 shadow-hard-subtle text-center flex flex-col items-center justify-center min-h-[420px]">
         <div className="thumbtack-blue"></div>
@@ -29,7 +31,7 @@ export default function ResultCard({ auditResult, rateMultiplier }) {
     why_out_of_scope = "This request expands beyond agreed deliverables.",
     replies = {},
     change_order = {}
-  } = auditResult;
+  } = activeAudit;
 
   // Recalibrate fee with rateMultiplier
   const baseFee = change_order.suggested_fee || 150;
@@ -174,19 +176,19 @@ ${lineItems.map(item => `- [ ] ${item}`).join('\n')}
         </div>
 
         {/* Tiger Data Historical Precedent Callout */}
-        {auditResult.precedent && auditResult.precedent.has_precedent && (
+        {activeAudit.precedent && activeAudit.precedent.has_precedent && (
           <div className="bg-[#f0fdf4] border-2 border-pencil rounded-wobbly-sm p-3.5 mb-6 shadow-hard-sm transform rotate-0.5">
             <div className="flex items-center justify-between mb-1">
               <span className="font-heading font-bold text-base text-pencil flex items-center gap-1.5">
-                <span>🐯</span> Tiger Data Precedent ({auditResult.precedent.similarity_pct}% Semantic Match)
+                <span>🐯</span> Tiger Data Precedent ({activeAudit.precedent.similarity_pct}% Semantic Match)
               </span>
               <span className="font-heading text-xs bg-white border border-pencil rounded-wobbly-sm px-2 py-0.5 text-markerRed font-bold shadow-hard-sm">
-                Past Fee: +${auditResult.precedent.past_fee}
+                Past Fee: +${activeAudit.precedent.past_fee}
               </span>
             </div>
             <p className="font-body text-base text-pencil/80">
-              Similar {auditResult.precedent.matched_category} detected in your historical audits:
-              <span className="italic font-bold text-pencil"> "{auditResult.precedent.past_message_snippet}"</span>
+              Similar {activeAudit.precedent.matched_category} detected in your historical audits:
+              <span className="italic font-bold text-pencil"> "{activeAudit.precedent.past_message_snippet}"</span>
             </p>
           </div>
         )}
@@ -227,116 +229,124 @@ ${lineItems.map(item => `- [ ] ${item}`).join('\n')}
           </ul>
         </div>
 
-        {/* Tone Selection Tabs */}
-        <div className="mb-4">
-          <div className="flex items-center justify-between mb-2">
-            <span className="font-heading text-base font-bold text-pencil">
-              💬 Choose Response Tone:
-            </span>
-            <span
-              id="toneBadge"
-              className="font-heading text-xs font-bold bg-white border border-pencil rounded-wobbly-sm px-2 py-0.5 shadow-hard-sm"
-            >
-              {activeTone === "boundary" ? "Firm Boundary" : activeTone === "executive" ? "Executive Change Order" : "Diplomatic"}
-            </span>
-          </div>
-          <div className="tone-tabs flex flex-wrap gap-2">
-            {[
-              { id: "diplomatic", label: "🟢 Diplomatic & Warm" },
-              { id: "boundary", label: "🟡 Firm Boundary" },
-              { id: "executive", label: "🔴 Executive Change Order" }
-            ].map(t => (
-              <button
-                key={t.id}
-                type="button"
-                data-tone={t.id}
-                onClick={() => setActiveTone(t.id)}
-                className={`tone-tab font-body text-lg px-3.5 py-1.5 border-2 border-pencil rounded-wobbly-btn transition-all ${
-                  activeTone === t.id
-                    ? 'bg-pencil text-white shadow-hard-sm transform -translate-y-0.5'
-                    : 'bg-white text-pencil hover:bg-oldpaper shadow-hard-sm'
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Response Box */}
-        <div className="relative mb-3">
-          <div
-            id="responseBox"
-            className="font-body text-xl text-pencil bg-[#faf7f2] border-2 border-pencil rounded-wobbly-sm p-4 min-h-[140px] whitespace-pre-wrap shadow-hard-sm leading-relaxed"
-          >
-            <div id="replyText">{currentReplyText}</div>
-          </div>
-        </div>
-
-        {/* Direct Action Dispatch Bar */}
-        <div className="flex flex-wrap items-center gap-2.5 mb-6">
-          <button
-            type="button"
-            id="copyBtn"
-            onClick={handleCopy}
-            className="hand-drawn-btn font-heading text-base font-bold bg-white hover:bg-postit text-pencil border-2 border-pencil rounded-wobbly-btn px-4 py-1.5 shadow-hard-sm flex items-center gap-1.5"
-          >
-            {copied ? "✅ Copied!" : "📋 Copy Reply"}
-          </button>
-          <button
-            type="button"
-            id="whatsappBtn"
-            onClick={handleWhatsApp}
-            className="hand-drawn-btn font-heading text-base font-bold bg-[#dcfce7] hover:bg-[#bbf7d0] text-pencil border-2 border-pencil rounded-wobbly-btn px-4 py-1.5 shadow-hard-sm flex items-center gap-1.5"
-            title="Open in WhatsApp directly"
-          >
-            <span>📲</span> Open in WhatsApp
-          </button>
-          <button
-            type="button"
-            id="emailBtn"
-            onClick={handleEmail}
-            className="hand-drawn-btn font-heading text-base font-bold bg-[#e0f2fe] hover:bg-[#bae6fd] text-pencil border-2 border-pencil rounded-wobbly-btn px-4 py-1.5 shadow-hard-sm flex items-center gap-1.5"
-            title="Open in Email client directly"
-          >
-            <span>✉️</span> Open in Email
-          </button>
-        </div>
-
-        {/* Change Order Mini-Invoice (Legal Pad Style) */}
-        <div className="change-order-card lined-paper border-2 border-pencil rounded-wobbly-sm p-5 shadow-hard-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-pencil pb-3 mb-3">
+        {/* Split Grid for Pushback Response + Change Order Invoice */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          
+          {/* Left Wing: Pushback Tone Selector & Dispatch Bar */}
+          <div className="flex flex-col space-y-3">
+            {/* Tone Selection Tabs */}
             <div>
-              <h4 className="font-heading text-xl font-bold text-pencil">
-                📑 Supplementary Change Order Summary
-              </h4>
-              <div className="flex items-center gap-2 mt-0.5">
-                <span id="coFee" className="font-heading text-xl font-bold text-markerRed">
-                  <span id="feeEst">+${calibratedFee} USD</span>
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-heading text-base font-bold text-pencil">
+                  💬 Choose Response Tone:
                 </span>
-                <span id="coTimeline" className="font-body text-base bg-white border border-pencil rounded-wobbly-sm px-2 py-0.5 text-pencil">
-                  +{timelineDays} Business Days
+                <span
+                  id="toneBadge"
+                  className="font-heading text-xs font-bold bg-white border border-pencil rounded-wobbly-sm px-2 py-0.5 shadow-hard-sm"
+                >
+                  {activeTone === "boundary" ? "Firm Boundary" : activeTone === "executive" ? "Executive Change Order" : "Diplomatic"}
                 </span>
               </div>
+              <div className="tone-tabs flex flex-wrap gap-2">
+                {[
+                  { id: "diplomatic", label: "🟢 Diplomatic & Warm" },
+                  { id: "boundary", label: "🟡 Firm Boundary" },
+                  { id: "executive", label: "🔴 Executive Change Order" }
+                ].map(t => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    data-tone={t.id}
+                    onClick={() => setActiveTone(t.id)}
+                    className={`tone-tab font-body text-base px-3 py-1.5 border-2 border-pencil rounded-wobbly-btn transition-all ${
+                      activeTone === t.id
+                        ? 'bg-pencil text-white shadow-hard-sm transform -translate-y-0.5'
+                        : 'bg-white text-pencil hover:bg-oldpaper shadow-hard-sm'
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
             </div>
-            <button
-              type="button"
-              id="downloadCoBtn"
-              onClick={handleDownloadChangeOrder}
-              className="hand-drawn-btn font-heading text-sm font-bold bg-penBlue text-white border-2 border-pencil rounded-wobbly-btn px-3.5 py-1.5 shadow-hard-sm hover:bg-[#23497e] flex items-center gap-1 self-start sm:self-auto"
-              title="Download formal Markdown Change Order"
-            >
-              ⬇️ Export (.md)
-            </button>
+
+            {/* Response Box */}
+            <div className="relative">
+              <div
+                id="responseBox"
+                className="font-body text-lg text-pencil bg-[#faf7f2] border-2 border-pencil rounded-wobbly-sm p-3.5 min-h-[140px] whitespace-pre-wrap shadow-hard-sm leading-relaxed"
+              >
+                <div id="replyText">{currentReplyText}</div>
+              </div>
+            </div>
+
+            {/* Direct Action Dispatch Bar */}
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <button
+                type="button"
+                id="copyBtn"
+                onClick={handleCopy}
+                className="hand-drawn-btn font-heading text-sm font-bold bg-white hover:bg-postit text-pencil border-2 border-pencil rounded-wobbly-btn px-3.5 py-1.5 shadow-hard-sm flex items-center gap-1.5"
+              >
+                {copied ? "✅ Copied!" : "📋 Copy Reply"}
+              </button>
+              <button
+                type="button"
+                id="whatsappBtn"
+                onClick={handleWhatsApp}
+                className="hand-drawn-btn font-heading text-sm font-bold bg-[#dcfce7] hover:bg-[#bbf7d0] text-pencil border-2 border-pencil rounded-wobbly-btn px-3.5 py-1.5 shadow-hard-sm flex items-center gap-1.5"
+                title="Open in WhatsApp directly"
+              >
+                <span>📲</span> Open in WhatsApp
+              </button>
+              <button
+                type="button"
+                id="emailBtn"
+                onClick={handleEmail}
+                className="hand-drawn-btn font-heading text-sm font-bold bg-[#e0f2fe] hover:bg-[#bae6fd] text-pencil border-2 border-pencil rounded-wobbly-btn px-3.5 py-1.5 shadow-hard-sm flex items-center gap-1.5"
+                title="Open in Email client directly"
+              >
+                <span>✉️</span> Open in Email
+              </button>
+            </div>
           </div>
 
-          <ul id="lineItemsList" className="space-y-1 font-body text-lg text-pencil/90 pl-1">
-            {lineItems.map((item, idx) => (
-              <li key={idx} className="flex items-center gap-2">
-                <span className="text-pencil font-bold">✓</span> {item}
-              </li>
-            ))}
-          </ul>
+          {/* Right Wing: Change Order Mini-Invoice (Legal Pad Style) */}
+          <div className="change-order-card lined-paper border-2 border-pencil rounded-wobbly-sm p-5 shadow-hard-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-pencil pb-3 mb-3">
+              <div>
+                <h4 className="font-heading text-xl font-bold text-pencil">
+                  📑 Supplementary Change Order Summary
+                </h4>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span id="coFee" className="font-heading text-xl font-bold text-markerRed">
+                    <span id="feeEst">+${calibratedFee} USD</span>
+                  </span>
+                  <span id="coTimeline" className="font-body text-base bg-white border border-pencil rounded-wobbly-sm px-2 py-0.5 text-pencil">
+                    +{timelineDays} Business Days
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                id="downloadCoBtn"
+                onClick={handleDownloadChangeOrder}
+                className="hand-drawn-btn font-heading text-sm font-bold bg-penBlue text-white border-2 border-pencil rounded-wobbly-btn px-3.5 py-1.5 shadow-hard-sm hover:bg-[#23497e] flex items-center gap-1 self-start sm:self-auto"
+                title="Download formal Markdown Change Order"
+              >
+                ⬇️ Export (.md)
+              </button>
+            </div>
+
+            <ul id="lineItemsList" className="space-y-1 font-body text-base text-pencil/90 pl-1">
+              {lineItems.map((item, idx) => (
+                <li key={idx} className="flex items-center gap-2">
+                  <span className="text-pencil font-bold">✓</span> {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
         </div>
       </div>
     </div>

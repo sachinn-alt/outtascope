@@ -16,6 +16,7 @@ export default function App() {
   const [rescuedHours, setRescuedHours] = useState(() => {
     return parseFloat(localStorage.getItem('outtascope_hours') || '19.5');
   });
+  const [layoutMode, setLayoutMode] = useState("wide");
 
   const handleAudit = async (formData) => {
     setIsLoading(true);
@@ -52,10 +53,10 @@ export default function App() {
         return next;
       });
 
-      // Smooth scroll into results on mobile
+      // Smooth scroll into results
       setTimeout(() => {
         const resEl = document.getElementById('resultCard');
-        if (resEl && window.innerWidth < 1024) {
+        if (resEl) {
           resEl.scrollIntoView({ behavior: 'smooth' });
         }
       }, 100);
@@ -77,7 +78,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-paper text-pencil font-body py-8 px-3 sm:px-6 lg:px-8 max-w-full overflow-x-hidden">
-      <div className="app-container max-w-6xl mx-auto overflow-hidden">
+      <div className="app-container max-w-7xl mx-auto overflow-hidden">
         <Header recoveredRevenue={recoveredRevenue} rescuedHours={rescuedHours} />
 
         {errorMessage && (
@@ -95,18 +96,24 @@ export default function App() {
           </div>
         )}
 
-        <main className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <AuditForm
-            onAudit={handleAudit}
-            isLoading={isLoading}
-            rateMultiplier={rateMultiplier}
-            setRateMultiplier={setRateMultiplier}
-          />
+        <main className={layoutMode === 'wide' ? 'space-y-8 mb-8' : 'grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-8'}>
+          <div className="w-full">
+            <AuditForm
+              onAudit={handleAudit}
+              isLoading={isLoading}
+              rateMultiplier={rateMultiplier}
+              setRateMultiplier={setRateMultiplier}
+              layoutMode={layoutMode}
+              onToggleLayout={setLayoutMode}
+            />
+          </div>
 
-          <ResultCard
-            auditResult={auditResult}
-            rateMultiplier={rateMultiplier}
-          />
+          <div id="resultCard" className="w-full">
+            <ResultCard
+              auditResult={auditResult}
+              rateMultiplier={rateMultiplier}
+            />
+          </div>
         </main>
 
         <TemplatesVault onInsertClause={handleInsertClause} />
