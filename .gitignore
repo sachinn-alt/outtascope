@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+outtascope.db
+.env
+.DS_Store
