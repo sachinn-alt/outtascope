@@ -119,17 +119,22 @@ python -m pytest tests -v
 
 Output:
 ```text
-tests/test_api.py::test_health_check_endpoint PASSED                     [ 10%]
-tests/test_api.py::test_get_templates_endpoint PASSED                    [ 20%]
-tests/test_api.py::test_audit_scope_success PASSED                       [ 30%]
-tests/test_api.py::test_audit_scope_validation_error PASSED              [ 40%]
-tests/test_api.py::test_get_history_endpoint PASSED                      [ 50%]
-tests/test_gemma_engine.py::test_architectural_overhaul PASSED           [ 60%]
-tests/test_gemma_engine.py::test_feature_creep PASSED                    [ 70%]
-tests/test_gemma_engine.py::test_timeline_compression PASSED             [ 80%]
-tests/test_gemma_engine.py::test_response_tone_formats PASSED            [ 90%]
+tests/test_api.py::test_health_check_endpoint PASSED                     [  6%]
+tests/test_api.py::test_get_templates_endpoint PASSED                    [ 13%]
+tests/test_api.py::test_audit_scope_success PASSED                       [ 20%]
+tests/test_api.py::test_audit_scope_validation_error PASSED              [ 26%]
+tests/test_api.py::test_get_history_endpoint PASSED                      [ 33%]
+tests/test_gemma_engine.py::test_architectural_overhaul PASSED           [ 40%]
+tests/test_gemma_engine.py::test_feature_creep PASSED                    [ 46%]
+tests/test_gemma_engine.py::test_timeline_compression PASSED             [ 53%]
+tests/test_gemma_engine.py::test_response_tone_formats PASSED            [ 60%]
+tests/test_playwright_e2e.py::test_playwright_page_loads_and_branding PASSED [ 66%]
+tests/test_playwright_e2e.py::test_playwright_sample_chip_interaction PASSED [ 73%]
+tests/test_playwright_e2e.py::test_playwright_audit_and_tone_switching PASSED [ 80%]
+tests/test_playwright_e2e.py::test_playwright_templates_vault PASSED     [ 86%]
+tests/test_playwright_e2e.py::test_playwright_mobile_viewport PASSED     [ 93%]
 tests/test_tiger_db.py::test_database_initialization_and_templates PASSED [100%]
-======================= 10 passed in 19.51s ========================
+======================= 15 passed in 32.86s ========================
 ```
 
 ---
