@@ -89,6 +89,51 @@ ollama run gemma2
 
 ---
 
+## 💻 Terminal CLI Tool & Change Order Export
+
+OuttaScope provides a terminal CLI for developers, scripts, and automation workflows:
+
+```bash
+# Run a terminal scope audit
+python -m src.cli audit "Can you completely redo the design and add Stripe checkout by tomorrow?" --budget 600 --type web_dev
+
+# Run audit and export a formal Change Order document
+python -m src.cli audit "We need 10 more revisions" --budget 400 --export change_order.md
+
+# List canned boundary templates from Tiger Data Vault
+python -m src.cli templates
+
+# View audit history
+python -m src.cli history
+```
+
+---
+
+## 🧪 Automated Test Suite (100% Pass)
+
+The application includes end-to-end integration and unit tests across the AI engine, database, and REST APIs:
+
+```bash
+python -m pytest tests -v
+```
+
+Output:
+```text
+tests/test_api.py::test_health_check_endpoint PASSED                     [ 10%]
+tests/test_api.py::test_get_templates_endpoint PASSED                    [ 20%]
+tests/test_api.py::test_audit_scope_success PASSED                       [ 30%]
+tests/test_api.py::test_audit_scope_validation_error PASSED              [ 40%]
+tests/test_api.py::test_get_history_endpoint PASSED                      [ 50%]
+tests/test_gemma_engine.py::test_architectural_overhaul PASSED           [ 60%]
+tests/test_gemma_engine.py::test_feature_creep PASSED                    [ 70%]
+tests/test_gemma_engine.py::test_timeline_compression PASSED             [ 80%]
+tests/test_gemma_engine.py::test_response_tone_formats PASSED            [ 90%]
+tests/test_tiger_db.py::test_database_initialization_and_templates PASSED [100%]
+======================= 10 passed in 19.51s ========================
+```
+
+---
+
 ## ☁️ 1-Click Deployment on Render
 
 OuttaScope is configured with a native `render.yaml` blueprint:
