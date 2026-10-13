@@ -58,6 +58,11 @@ graph TD
 - **Web Interface:** Vanilla HTML5, Modern CSS Glassmorphism, Zero Framework Bloat
 - **Cloud Deployment:** [Render](https://render.com) (Free Web Service Tier via `render.yaml`)
 
+### 📚 Formal Engineering Specifications
+- 📋 [**Product Requirements Document (PRD.md)**](PRD.md) — Personas, user journeys, feature matrix & business metrics.
+- ⚙️ [**Technical Requirements Document (TRD.md)**](TRD.md) — System architecture, API contracts, Gemma 2 pipeline & data schemas.
+- 🎨 [**Design Specification (DESIGN.md)**](DESIGN.md) — UI design system, color tokens, layout wireframes & accessibility standards.
+
 ---
 
 ## 🚀 Quickstart & Local Installation
